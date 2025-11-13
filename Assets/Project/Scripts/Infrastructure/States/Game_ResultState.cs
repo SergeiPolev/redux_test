@@ -14,13 +14,11 @@ namespace Infrastructure
     {
         private WindowService _windowService;
         private IGameStateChanger _stateChanger;
-        private PauseService _pauseService;
         protected string _result;
 
         public Game_ResultState(IGameStateChanger stateChanger, AllServices services) 
         {
             _stateChanger = stateChanger;
-            _pauseService = services.Single<PauseService>();
             _windowService = services.Single<WindowService>();
         }
 
@@ -31,7 +29,6 @@ namespace Infrastructure
 
         public void Enter(LevelResult result)
         {
-
             if (result == LevelResult.WIN)
             {
                 AllServices.Container.Single<LevelProgressService>().LevelComplete();

@@ -1,6 +1,5 @@
 ﻿using StateMachine;
 using Services;
-using DebugGame;
 using UnityEngine;
 
 namespace Infrastructure
@@ -28,19 +27,15 @@ namespace Infrastructure
 
         private void RegisterServices()
         {
-            _services.RegisterSingle(new GoogleSheetService());
             _services.RegisterSingle(new StaticDataService());
             _services.RegisterSingle(new SaveLoadService());
             _services.RegisterSingle(new LevelProgressService());
             _services.RegisterSingle(new WalletService());
-            _services.RegisterSingle(new DebugService());
             _services.RegisterSingle(new GameWalletService());
 
             _services.RegisterSingle(new UIFactory());
             _services.RegisterSingle(new WindowService());
-            _services.RegisterSingle(new CombatTextFactory());
 
-            _services.RegisterSingle(new PauseService());
             _services.RegisterSingle(new GlobalBlackboard());
             _services.RegisterSingle(new InputService());
             _services.RegisterSingle(new HexPilesService());
@@ -59,16 +54,12 @@ namespace Infrastructure
 
         private void InitServices()
         {
-            _services.Single<StaticDataService>().Initialize();
+            InitCore();
+            
             _services.Single<WalletService>().Initialize();
             _services.Single<GameWalletService>().Initialize();
             _services.Single<LevelProgressService>().Initialize(_services);
-            _services.Single<UIFactory>().Initialize(_services);
-            _services.Single<SaveLoadService>().Initialize(_services);
-            _services.Single<WindowService>().Initialize(_services.Single<UIFactory>());
-            _services.Single<GoogleSheetService>().Initialize(_services.Single<StaticDataService>());
             _services.Single<GlobalBlackboard>().Initialize();
-            _services.Single<CombatTextFactory>().Initialize();
             _services.Single<BoosterService>().Initialize(_services);
             _services.Single<CancellationAsyncService>().Initialize(_monoBehaviour);
             _services.Single<ResultService>().Initialize(_stateChanger, _services.Single<LevelProgressService>(),  _services.Single<MergeService>(),  _services.Single<IHexGridService>());
@@ -93,8 +84,16 @@ namespace Infrastructure
                 .Initialize(_services.Single<GlobalBlackboard>(), _services.Single<StaticDataService>(), _services.Single<CameraService>());
 
 
-            _services.Single<DebugService>().Initialize(_services, _stateChanger);
             _services.Single<ColorMaterialsService>().Initialize(_services.Single<StaticDataService>(), _services.Single<GlobalBlackboard>());
+        }
+
+        private void InitCore()
+        {
+            _services.Single<StaticDataService>().Initialize();
+            _services.Single<UIFactory>().Initialize(_services);
+            _services.Single<SaveLoadService>().Initialize(_services);
+            _services.Single<WindowService>().Initialize(_services.Single<UIFactory>());
+            
         }
 
 

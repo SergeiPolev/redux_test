@@ -13,16 +13,9 @@ MonoBehaviour:
   m_Name: WindowStaticData
   m_EditorClassIdentifier: 
   Configs:
-  - {fileID: 4308083583208501116, guid: bfb43b5d0b2e67c4f9346b7f4fda3ea0, type: 3}
-  - {fileID: 1388600032006676714, guid: bb3d5948aa0b1bf44a89e20dda3adffe, type: 3}
   - {fileID: 836912809698182580, guid: 6111af0f5a58bcc4c8c25d5f790f5eb6, type: 3}
   - {fileID: 2118156378600325286, guid: c8b032a9ffc28b04e8b92a87d34d8094, type: 3}
   - {fileID: 2888227309720635454, guid: b7b633a70842cf44aa3fb13f917eb7c7, type: 3}
   - {fileID: 7614649627843016879, guid: 9f37289002c4de44db603c43f01a4643, type: 3}
-  - {fileID: 2303070994915175638, guid: 46ba0c6e06a92984fb1bff70c542177a, type: 3}
-  - {fileID: 7600447242707244288, guid: f905c472a47ee0c49943847a3f1a03f4, type: 3}
   - {fileID: 6087929106705491452, guid: 05efdba7c93dd9a4f8341822c899a6cb, type: 3}
   - {fileID: 3914377074301297819, guid: 9129511a44229544888060c1c0d39e1d, type: 3}
-  - {fileID: -3626758086320245049, guid: 444c50ed0a8e8fd40ab4a5c1a3b48214, type: 3}
-  - {fileID: 3991627260227217513, guid: 5f8cba19e6d0f9b468db87518c53fd02, type: 3}
-  - {fileID: 7420265068364286401, guid: 5057a09246638ff4c9fecf578ab7fba3, type: 3}

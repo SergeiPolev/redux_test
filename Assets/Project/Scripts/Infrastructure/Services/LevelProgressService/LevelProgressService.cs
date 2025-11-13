@@ -15,7 +15,6 @@ namespace Services
     public class LevelProgressService : IService, ISaveProgress, ITick
     {
         private float _timer;
-        private PauseService _pause;
         private StaticDataService _staticDataService;
         private SaveLoadService _save;
         private LevelProgressData _data;
@@ -46,7 +45,6 @@ namespace Services
 
         public void Initialize(AllServices services )
         {
-            _pause = services.Single<PauseService>();
             _save = services.Single<SaveLoadService>();
             _staticDataService = services.Single<StaticDataService>();
         }
@@ -68,8 +66,6 @@ namespace Services
 
         public void Tick()
         {
-            if(_pause.IsPaused) 
-                return;
             _timer += Time.deltaTime;
         }
 
