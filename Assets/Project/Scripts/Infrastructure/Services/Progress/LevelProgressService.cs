@@ -10,7 +10,7 @@ namespace Infrastructure.Services.Progress
     [System.Serializable]
     public class LevelProgressData
     {
-        public int MaxLevel = 1;
+        public int MaxLevel = 99;
         public int CurrentLevel = 1;
     }
     
@@ -18,7 +18,7 @@ namespace Infrastructure.Services.Progress
     {
         private float _timer;
         private StaticDataService _staticDataService;
-        private LevelProgressData _data;
+        private LevelProgressData _data = new LevelProgressData();
         
         public float Timer => _timer;
         public int LevelIndex => CurrentLevelNumber - 1;
