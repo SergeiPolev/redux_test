@@ -33,14 +33,14 @@ namespace Boosters.Views
             return sequence.Play().SetLink(gameObject).SetEase(Ease.Linear);
         }
 
-        public Tween Disappear()
+        public void Disappear()
         {
             var sequence = DOTween.Sequence();
             sequence.AppendInterval(0.5f);
             sequence.Append(
                 _meshRenderer.transform.DOLocalRotate(new Vector3(0, 0, 10), 0.5f, RotateMode.LocalAxisAdd));
             sequence.Append(_meshRenderer.transform.DOScale(0, 0.5f));
-            return sequence.SetLink(gameObject);
+            sequence.SetLink(gameObject);
         }
     }
 }

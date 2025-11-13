@@ -209,27 +209,6 @@ namespace Hexes
             }
 
             return null;
-
-            var bestD2 = float.PositiveInfinity;
-            HexCell best = null;
-            for (var x = 0; x < Width; x++)
-            for (var y = 0; y < Height; y++)
-            {
-                var c = Cells[x, y];
-                if (onlyEmpty && !c.IsEmpty())
-                {
-                    continue;
-                }
-
-                var d2 = (c.WorldPos - world).sqrMagnitude;
-                if (d2 < bestD2)
-                {
-                    bestD2 = d2;
-                    best = c;
-                }
-            }
-
-            return best;
         }
         // ----- КОЛЬЦО РАДИУСА R ОТ (cx,cy) -----
         // ----- AXIAL / OFFSET / DISTANCE -----

@@ -17,7 +17,7 @@ namespace Infrastructure.Services.Core
         public void Initialize(IHexGridService hexGridService)
         {
             _hexGridService = hexGridService;
-            CameraGroup = Object.FindObjectOfType<CameraGroup>();
+            CameraGroup = Object.FindAnyObjectByType<CameraGroup>();
             Camera = Camera.main;
             //SetWidth(10f);
         }

@@ -87,7 +87,7 @@ namespace Tools
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogWarning("Error SafeAreaHelper");
+                    Debug.LogWarning($"Error SafeAreaHelper {ex}");
                 }
             }
         }
