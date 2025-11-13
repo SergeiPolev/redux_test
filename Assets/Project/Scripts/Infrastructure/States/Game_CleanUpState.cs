@@ -4,9 +4,9 @@ using Infrastructure.StateMachine;
 
 namespace Infrastructure.States
 {
-    internal class Game_CleanUpState :  IState
+    internal class Game_CleanUpState : IState
     {
-        private IGameStateChanger _stateChanger;
+        private readonly IGameStateChanger _stateChanger;
         private WindowService _windowService;
 
         public Game_CleanUpState(IGameStateChanger stateChanger, AllServices services)
@@ -19,11 +19,10 @@ namespace Infrastructure.States
         {
             SetState();
         }
-        
-        
+
+
         public void Exit()
         {
-
         }
 
         private void SetState()

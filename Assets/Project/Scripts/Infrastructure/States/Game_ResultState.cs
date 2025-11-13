@@ -11,24 +11,19 @@ namespace Infrastructure.States
     {
         WIN,
         LOSE,
-        LEAVE
+        LEAVE,
     }
 
     internal class Game_ResultState : ITick, IPayloadedState<LevelResult>
     {
-        private WindowService _windowService;
-        private IGameStateChanger _stateChanger;
+        private readonly IGameStateChanger _stateChanger;
+        private readonly WindowService _windowService;
         protected string _result;
 
-        public Game_ResultState(IGameStateChanger stateChanger, AllServices services) 
+        public Game_ResultState(IGameStateChanger stateChanger, AllServices services)
         {
             _stateChanger = stateChanger;
             _windowService = services.Single<WindowService>();
-        }
-
-        public void Tick()
-        {
-            
         }
 
         public void Enter(LevelResult result)
@@ -46,14 +41,17 @@ namespace Infrastructure.States
             }
         }
 
+        public void Exit()
+        {
+        }
+
+        public void Tick()
+        {
+        }
+
         private void OnHub()
         {
             _stateChanger.Enter<Game_CleanUpState>();
-        }
-
-        public void Exit()
-        {
-
         }
     }
 }

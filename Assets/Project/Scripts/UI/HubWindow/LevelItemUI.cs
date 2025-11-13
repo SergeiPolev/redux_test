@@ -6,12 +6,16 @@ namespace UI.HubWindow
 {
     public class LevelItemUI : MonoBehaviour
     {
+        #region Serialized Fields
+
         public Sprite[] Visuals;
         public Image Icon;
         public Image Outline;
         public CanvasGroup NewItemGroup;
         public Image NewItemIcon;
         public TextMeshProUGUI LevelText;
+
+        #endregion
 
         public void SetLevelNumber(int levelNumber, bool isCurrent)
         {

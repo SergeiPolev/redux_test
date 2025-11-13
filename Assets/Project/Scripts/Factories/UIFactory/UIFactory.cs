@@ -11,13 +11,13 @@ namespace Factories.UIFactory
         private const string UIRootPath = "UI/UIRoot";
         private AllServices _services;
         private StaticDataService _staticData;
-        private Transform _uiRoot;
-        public Transform UIRoot => _uiRoot;
 
         public UIFactory()
         {
             CreateUIRoot();
         }
+
+        public Transform UIRoot { get; private set; }
 
         public void Initialize(AllServices services)
         {
@@ -28,17 +28,17 @@ namespace Factories.UIFactory
         public T CreateWindow<T>(WindowId windowId) where T : WindowBase
         {
             var winPrefab = _staticData.ForWindow(windowId);
-            var window = Object.Instantiate(winPrefab, _uiRoot) as T;
+            var window = Object.Instantiate(winPrefab, UIRoot) as T;
             window.Initialize(_services);
             window.gameObject.SetActive(false);
             return window;
         }
-        
+
         private void CreateUIRoot()
         {
-            _uiRoot = Object.Instantiate(Resources.Load<GameObject>(UIRootPath)).transform;
+            UIRoot = Object.Instantiate(Resources.Load<GameObject>(UIRootPath)).transform;
 
-            if (_uiRoot.TryGetComponent(out Canvas canvas))
+            if (UIRoot.TryGetComponent(out Canvas canvas))
             {
                 canvas.worldCamera = Camera.main;
             }

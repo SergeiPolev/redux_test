@@ -8,10 +8,9 @@ namespace Infrastructure.Services.Core
     {
         public Dictionary<ColorID, Color> ColorsByID = new();
         public Dictionary<ColorID, Material> MaterialsByColorID = new();
-        
+
         public void Initialize()
         {
-            
         }
     }
 }

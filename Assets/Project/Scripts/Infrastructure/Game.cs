@@ -6,9 +6,10 @@ using UnityEngine;
 namespace Infrastructure
 {
     public class Game : MonoBehaviour, ICoroutineRunner
-    {        
-        private GameStateMachine _stateMachine;
-        public GameStateMachine StateMachine => _stateMachine;
+    {
+        public GameStateMachine StateMachine { get; private set; }
+
+        #region Event Functions
 
         private void Awake()
         {
@@ -18,13 +19,20 @@ namespace Infrastructure
 
         private void Update()
         {
-            _stateMachine.Tick();
+            StateMachine.Tick();
         }
 
         private void FixedUpdate()
         {
-            _stateMachine.FixedTick();
+            StateMachine.FixedTick();
         }
+
+        private void OnApplicationQuit()
+        {
+            StateMachine.Enter<Game_AppQuit_State>();
+        }
+
+        #endregion
 
         private void SetScreenSleep()
         {
@@ -33,13 +41,8 @@ namespace Infrastructure
 
         private void SetStateMachine()
         {
-            _stateMachine = new GameStateMachine(AllServices.Container, this, this);
-            _stateMachine.Enter<BootstrapState>();
-        }
-
-        private void OnApplicationQuit()
-        {
-            _stateMachine.Enter<Game_AppQuit_State>();
+            StateMachine = new GameStateMachine(AllServices.Container, this, this);
+            StateMachine.Enter<BootstrapState>();
         }
     }
 }

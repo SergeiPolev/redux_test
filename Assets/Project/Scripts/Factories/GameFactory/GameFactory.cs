@@ -10,27 +10,28 @@ namespace Factories.GameFactory
 {
     public class GameFactory : IService
     {
+        private CameraService _cameraService;
+
+        private Transform _cellsParent;
         private GlobalBlackboard _globalBlackboard;
         private StaticDataService _staticData;
-        private CameraService _cameraService;
-        
-        private Transform _cellsParent;
 
-        public void Initialize(GlobalBlackboard globalBlackboard, StaticDataService staticData, CameraService cameraService)
+        public void Initialize(GlobalBlackboard globalBlackboard, StaticDataService staticData,
+            CameraService cameraService)
         {
             _globalBlackboard = globalBlackboard;
             _staticData = staticData;
             _cameraService = cameraService;
-            
-            _cellsParent =  new GameObject("Cells").transform;
+
+            _cellsParent = new GameObject("Cells").transform;
         }
-        
+
         public HexCellView CreateCellView(int index)
         {
             var prefab = _staticData.Prefabs.HexCellView;
             var model = LeanPool.Spawn(prefab, Vector3.zero, Quaternion.identity, _cellsParent);
             model.Initialize(index);
-            
+
             return model;
         }
 
@@ -43,7 +44,7 @@ namespace Factories.GameFactory
         {
             var prefab = _staticData.Prefabs.HexPile;
             var pile = LeanPool.Spawn(prefab);
-            
+
             return pile;
         }
 
@@ -53,7 +54,7 @@ namespace Factories.GameFactory
             var model = LeanPool.Spawn(prefab, Vector3.zero, Quaternion.identity);
 
             model.transform.position = _cameraService.CameraGroup.TargetPoint.position + Vector3.up * 1;
-            
+
             return model;
         }
 
@@ -63,11 +64,11 @@ namespace Factories.GameFactory
             var color = _globalBlackboard.ColorsByID[id];
             var prefab = _staticData.Prefabs.HexModelView;
             var model = LeanPool.Spawn(prefab, Vector3.zero, Quaternion.identity);
-            
+
             model.SetMaterial(material);
             model.SetVFXColor(color);
             model.Initialize();
-            
+
             return model;
         }
 
@@ -77,7 +78,7 @@ namespace Factories.GameFactory
             var model = LeanPool.Spawn(prefab, Vector3.zero, Quaternion.identity);
 
             model.transform.position = _cameraService.CameraGroup.TargetPoint.position + Vector3.up * 1;
-            
+
             return model;
         }
 

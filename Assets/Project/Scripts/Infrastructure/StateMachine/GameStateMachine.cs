@@ -20,7 +20,6 @@ namespace Infrastructure.StateMachine
                 [typeof(Game_ResultState)] = new Game_ResultState(this, services),
                 [typeof(Game_CleanUpState)] = new Game_CleanUpState(this, services),
                 [typeof(Game_AppQuit_State)] = new Game_AppQuit_State(this, services),
-                
             };
         }
     }

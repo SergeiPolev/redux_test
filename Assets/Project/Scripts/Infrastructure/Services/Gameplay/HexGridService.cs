@@ -9,10 +9,10 @@ namespace Infrastructure.Services.Gameplay
 {
     public class HexGridService : IHexGridService
     {
-        private HexGrid _hexGrid;
-        private GameFactory _gameFactory;
-        private LevelProgressService _levelProgressService;
         private CameraService _cameraService;
+        private GameFactory _gameFactory;
+        private HexGrid _hexGrid;
+        private LevelProgressService _levelProgressService;
 
         public void Initialize(AllServices services)
         {
@@ -55,7 +55,8 @@ namespace Infrastructure.Services.Gameplay
 
         public Vector3 GetGridCenterPos()
         {
-            return _hexGrid.Origin + (_hexGrid.GridPosToWorld(_hexGrid.Width - 1, _hexGrid.Height - 1) - _hexGrid.Origin) * 0.5f;
+            return _hexGrid.Origin +
+                   (_hexGrid.GridPosToWorld(_hexGrid.Width - 1, _hexGrid.Height - 1) - _hexGrid.Origin) * 0.5f;
         }
     }
 }

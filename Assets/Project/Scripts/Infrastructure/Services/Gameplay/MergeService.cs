@@ -15,12 +15,12 @@ namespace Infrastructure.Services.Gameplay
 
     public class MergeService : IService
     {
-        private IHexGridService _hexGridService;
         private CancellationAsyncService _cancellationAsyncService;
+        private IHexGridService _hexGridService;
+
+        private bool _taskStarted;
 
         public Queue<MergeQueueElement> TaskQueue = new();
-
-        private bool _taskStarted = false;
 
         public event Action OnMergeEnded;
 
@@ -36,9 +36,9 @@ namespace Infrastructure.Services.Gameplay
             {
                 TaskQueue.Enqueue(new MergeQueueElement
                 {
-                    Cell = x, Action = OnCellChanged
+                    Cell = x, Action = OnCellChanged,
                 });
-                
+
                 CheckMergeQueue();
             };
         }
@@ -66,7 +66,7 @@ namespace Infrastructure.Services.Gameplay
             {
                 return;
             }
-            
+
             var neighbors = _hexGridService.GetNeighbors(cell.x, cell.y);
             var placedColor = cell.GetTopColor();
             var sameColoredNeighbours = neighbors.Where(x => !x.IsEmpty() && x.GetTopColor() == placedColor);
@@ -75,7 +75,7 @@ namespace Infrastructure.Services.Gameplay
             {
                 return;
             }
-            
+
             foreach (var neighbor in sameColoredNeighbours)
             {
                 if (cell.IsEmpty())

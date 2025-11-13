@@ -6,11 +6,11 @@ namespace Boosters
     public interface IBooster
     {
         bool IsActive { get; }
+        BoosterId BoosterId { get; }
 
         public event Action<BoosterProgressEvent> OnProgressChanged;
         event Action OnActivated;
         event Action OnDeactivated;
-        BoosterId BoosterId { get; }
 
         void Activate();
         void Tick();

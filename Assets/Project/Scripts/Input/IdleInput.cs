@@ -5,7 +5,6 @@ namespace Input
     {
         public void OnClickDown()
         {
-            
         }
 
         public void OnDrag()

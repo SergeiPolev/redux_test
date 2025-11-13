@@ -18,16 +18,18 @@ namespace Hexes
             Disabled,
         }
 
+        public readonly List<Hex> Hexes = new();
+
 
         public readonly int Index;
-        public readonly List<Hex> Hexes = new();
+        public HexCellState CellState = HexCellState.Normal;
+        public HexCellView ModelView;
+
+        public Action<HexCell> OnCellChanged;
+        public Action<int> OnHexesRemoved;
+        public Vector3 WorldPos;
         public int x;
         public int y;
-        public Vector3 WorldPos;
-        public HexCellView ModelView;
-        public HexCellState CellState = HexCellState.Normal;
-
-        public bool IsLocked => CellState != HexCellState.Normal;
 
         public HexCell(int index, int x, int y)
         {
@@ -36,8 +38,7 @@ namespace Hexes
             this.y = y;
         }
 
-        public Action<HexCell> OnCellChanged;
-        public Action<int> OnHexesRemoved;
+        public bool IsLocked => CellState != HexCellState.Normal;
 
 
         public void AddHexesInstant(ICollection<Hex> hexes)
@@ -48,7 +49,7 @@ namespace Hexes
             {
                 hex.HexModelView.transform.SetParent(ModelView.transform);
             }
-            
+
             RebuildStack();
 
             ModelView.OnPilePlacedAnimation();
@@ -60,17 +61,17 @@ namespace Hexes
             var hadHexCount = Hexes.Count;
             Hexes.AddRange(hexes);
 
-            for (int i = hadHexCount; i < Hexes.Count; i++)
+            for (var i = hadHexCount; i < Hexes.Count; i++)
             {
                 var hex = Hexes[i];
                 hex.HexModelView.transform.SetParent(ModelView.transform, true);
-                Tween tween = hex.HexModelView.MoveToLocalPos(Vector3.up * (0.1f * i)).OnComplete(OnFillAnimation);
-                
-                await ((i == Hexes.Count - 1)
-                    ? tween.WithCancellation(cancellationToken) 
+                var tween = hex.HexModelView.MoveToLocalPos(Vector3.up * (0.1f * i)).OnComplete(OnFillAnimation);
+
+                await (i == Hexes.Count - 1
+                    ? tween.WithCancellation(cancellationToken)
                     : tween.AsyncWaitForPosition(0.1f).AsUniTask().AttachExternalCancellation(cancellationToken));
             }
-            
+
             OnCellChanged?.Invoke(this);
         }
 
@@ -87,11 +88,11 @@ namespace Hexes
         public List<Hex> GetTopHexes()
         {
             var topHexes = new List<Hex>();
-            ColorID color = GetTopColor();
-            
-            for (int i = Hexes.Count - 1; i >= 0; i--)
+            var color = GetTopColor();
+
+            for (var i = Hexes.Count - 1; i >= 0; i--)
             {
-                Hex hex = Hexes[i];
+                var hex = Hexes[i];
 
                 if (hex.ColorID == color)
                 {
@@ -103,7 +104,7 @@ namespace Hexes
                     break;
                 }
             }
-            
+
             return topHexes;
         }
 
@@ -121,6 +122,7 @@ namespace Hexes
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -131,9 +133,9 @@ namespace Hexes
 
         public int GetTopColorCount()
         {
-            ColorID color = GetTopColor();
-            int count = 0;
-            for (int i = Hexes.Count - 1; i >= 0; i--)
+            var color = GetTopColor();
+            var count = 0;
+            for (var i = Hexes.Count - 1; i >= 0; i--)
             {
                 var hex = Hexes[i];
                 if (hex.ColorID == color)
@@ -145,35 +147,35 @@ namespace Hexes
                     break;
                 }
             }
-            
+
             return count;
         }
 
         public async UniTask RemoveHexes(CancellationToken cancellationToken)
         {
-            int hexesCount = Hexes.Count;
+            var hexesCount = Hexes.Count;
             for (var index = hexesCount - 1; index >= 0; index--)
             {
                 var hex = Hexes[index];
-                Tween tween = hex.HexModelView.OnStackComplete();
+                var tween = hex.HexModelView.OnStackComplete();
                 await tween.AsyncWaitForPosition(0.1f).AsUniTask().AttachExternalCancellation(cancellationToken);
             }
-            
+
             Hexes.Clear();
             OnHexesRemoved?.Invoke(hexesCount);
             OnCellChanged?.Invoke(this);
         }
-        
+
         public async UniTask RemoveTopHexes(CancellationToken cancellationToken)
         {
             var topHexes = GetTopHexes();
             var count = topHexes.Count;
             foreach (var hex in topHexes)
             {
-                Tween tween = hex.HexModelView.OnStackComplete();
+                var tween = hex.HexModelView.OnStackComplete();
                 await tween.AsyncWaitForPosition(0.1f).AsUniTask().AttachExternalCancellation(cancellationToken);
             }
-            
+
             OnHexesRemoved?.Invoke(count);
             OnCellChanged?.Invoke(this);
         }
@@ -186,10 +188,10 @@ namespace Hexes
 
         private void RebuildStack()
         {
-            for (int i = 0; i < Hexes.Count; i++)
+            for (var i = 0; i < Hexes.Count; i++)
             {
                 var hex = Hexes[i];
-                
+
                 hex.HexModelView.transform.localPosition = Vector3.up * (0.1f * i);
             }
         }

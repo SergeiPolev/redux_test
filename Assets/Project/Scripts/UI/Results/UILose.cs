@@ -7,10 +7,14 @@ namespace UI.Results
 {
     public class UILose : WindowBase
     {
-        public Action OnHubE;
-        public override WindowId WindowID => WindowId.Lose;
+        #region Serialized Fields
 
         [SerializeField] private CanvasGroup _group;
+
+        #endregion
+
+        public Action OnHubE;
+        public override WindowId WindowID => WindowId.Lose;
 
         protected override void _Open()
         {
@@ -23,10 +27,7 @@ namespace UI.Results
         {
             DOTween.Sequence(this)
                 .Append(_group.DOFade(0, 0.5f))
-                .AppendCallback(() =>
-                {
-                    base._Close();
-                });        
+                .AppendCallback(() => { base._Close(); });
         }
 
         public void OnHub()

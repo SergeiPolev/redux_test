@@ -7,7 +7,11 @@ namespace Infrastructure.Services.Core
     [CreateAssetMenu(fileName = "Colors Static Data", menuName = "Game/Colors/Data")]
     public class ColorsStaticData : ScriptableObject
     {
+        #region Serialized Fields
+
         public ColorTuple[] Colors;
+
+        #endregion
     }
 
     [Serializable]

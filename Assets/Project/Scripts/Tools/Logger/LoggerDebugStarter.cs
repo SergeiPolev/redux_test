@@ -15,7 +15,7 @@ namespace Tools.Logger
             Logger.Dispose();
         }
 
-        [UnityEngine.ContextMenu("Open Folder")]
+        [ContextMenu("Open Folder")]
         private void OpenFolder()
         {
             Logger.OpenFolder();

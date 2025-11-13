@@ -7,7 +7,7 @@ namespace Infrastructure
 {
     public class Level_NextStageState : IState, ITick
     {
-        private IStateChanger _sessionStateMachine;
+        private readonly IStateChanger _sessionStateMachine;
 
         public Level_NextStageState(IStateChanger sessionStateMachine, AllServices services)
         {
@@ -23,12 +23,10 @@ namespace Infrastructure
 
         public void Exit()
         {
-            
         }
 
         public void Tick()
         {
-            
         }
     }
 }

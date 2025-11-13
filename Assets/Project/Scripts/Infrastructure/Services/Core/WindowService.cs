@@ -7,9 +7,8 @@ namespace Infrastructure.Services.Core
 {
     public class WindowService : IService
     {
-        private UIFactory _uiFactory;
-
         private readonly Dictionary<WindowId, WindowBase> _windows = new();
+        private UIFactory _uiFactory;
 
         public void Initialize(UIFactory factory)
         {
@@ -26,7 +25,9 @@ namespace Infrastructure.Services.Core
         {
             window = null;
             if (IsOpen(windowId))
+            {
                 return false;
+            }
 
             window = GetOrCreateWindow<T>(windowId);
             window.Open();
@@ -40,18 +41,18 @@ namespace Infrastructure.Services.Core
             {
                 _windows.Add(windowId, _uiFactory.CreateWindow<T>(windowId));
             }
-            
+
             return _windows[windowId] as T;
         }
 
         public void Close(WindowId windowId)
         {
-            if (IsOpen(windowId) == false)
+            if (!IsOpen(windowId))
             {
                 return;
             }
 
-            if (_windows.TryGetValue(windowId, out WindowBase window))
+            if (_windows.TryGetValue(windowId, out var window))
             {
                 window.Close();
             }
@@ -59,7 +60,7 @@ namespace Infrastructure.Services.Core
 
         private bool IsOpen(WindowId windowId)
         {
-            if (_windows.TryGetValue(windowId, out WindowBase window))
+            if (_windows.TryGetValue(windowId, out var window))
             {
                 return window.IsOpen;
             }
@@ -68,4 +69,3 @@ namespace Infrastructure.Services.Core
         }
     }
 }
-

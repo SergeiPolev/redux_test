@@ -7,26 +7,12 @@ namespace Infrastructure.States
 {
     internal class Game_LevelState : StateMachine_IState, ITick, IFixedTick, ILateTick
     {
-        private LevelStateMachine _lvlStageMachine;
+        private readonly LevelStateMachine _lvlStageMachine;
 
         public Game_LevelState(IGameStateChanger stateChanger, AllServices services)
         {
             _lvlStageMachine = new LevelStateMachine(stateChanger, services);
             services.Single<ResultService>().SetLevelStateChanger(_lvlStageMachine);
-        }
-
-        public void Enter()
-        {
-            _lvlStageMachine.Enter<Level_InitLevelState>();
-        }
-        public void Exit()
-        {
-            _lvlStageMachine.Enter<Level_CleanUpState>();            
-        }
-        
-        public void Tick()
-        {
-            _lvlStageMachine.Tick();
         }
 
         public void FixedTick()
@@ -37,6 +23,21 @@ namespace Infrastructure.States
         public void LateTick()
         {
             _lvlStageMachine.LateTick();
+        }
+
+        public void Tick()
+        {
+            _lvlStageMachine.Tick();
+        }
+
+        public void Enter()
+        {
+            _lvlStageMachine.Enter<Level_InitLevelState>();
+        }
+
+        public void Exit()
+        {
+            _lvlStageMachine.Enter<Level_CleanUpState>();
         }
     }
 }

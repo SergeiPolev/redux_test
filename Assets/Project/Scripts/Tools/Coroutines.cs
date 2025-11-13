@@ -3,22 +3,24 @@ using UnityEngine;
 
 namespace Tools
 {
-    public sealed class Coroutines: MonoBehaviour
+    public sealed class Coroutines : MonoBehaviour
     {
+        private static Coroutines _instanse;
+
         private static Coroutines instanse
         {
-            get {
+            get
+            {
                 if (_instanse == null)
                 {
                     var go = new GameObject("[COROUTINE MANAGER]");
                     _instanse = go.AddComponent<Coroutines>();
                     DontDestroyOnLoad(go);
                 }
+
                 return _instanse;
             }
         }
-
-        private static Coroutines _instanse;
 
         public static Coroutine StartRoutine(IEnumerator enumerator)
         {

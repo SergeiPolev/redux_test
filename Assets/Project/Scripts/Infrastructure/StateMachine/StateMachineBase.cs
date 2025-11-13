@@ -5,11 +5,11 @@ namespace Infrastructure.StateMachine
 {
     public abstract class StateMachineBase
     {
-        protected Dictionary<Type, IExitableState> _states;
         protected IExitableState _activeState;
-        protected ITick _tickableState;
         protected IFixedTick _fixedTickableState;
         protected ILateTick _lateTickableState;
+        protected Dictionary<Type, IExitableState> _states;
+        protected ITick _tickableState;
 
         public void Enter<TState>() where TState : class, IState
         {
@@ -41,7 +41,7 @@ namespace Infrastructure.StateMachine
         protected TState ChangeState<TState>() where TState : class, IExitableState
         {
             _activeState?.Exit();
-            TState state = GetState<TState>();
+            var state = GetState<TState>();
             _activeState = state;
 
             if (_activeState is ITick tickableState)
@@ -80,4 +80,3 @@ namespace Infrastructure.StateMachine
         }
     }
 }
-

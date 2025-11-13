@@ -4,8 +4,8 @@ namespace Hexes
 {
     public class Hex
     {
-        public HexModelView HexModelView;
         public ColorID ColorID;
+        public HexModelView HexModelView;
 
         public Hex(HexModelView hexModelView, ColorID colorID)
         {

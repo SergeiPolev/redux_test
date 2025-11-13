@@ -7,23 +7,23 @@ namespace Boosters
 {
     public class ShufflePilesBooster : IBooster
     {
-        private HexPilesService _pilesService;
+        private readonly HexPilesService _pilesService;
         private float _timer;
-    
-        public event Action<BoosterProgressEvent> OnProgressChanged;
 
-        public event Action OnActivated;
-        public event Action OnDeactivated;
-    
-        public bool IsActive { get; private set; }
-
-        public BoosterId BoosterId => BoosterId.ShufflePiles;
-    
         public ShufflePilesBooster(AllServices services)
         {
             _pilesService = services.Single<HexPilesService>();
         }
-    
+
+        public event Action<BoosterProgressEvent> OnProgressChanged;
+
+        public event Action OnActivated;
+        public event Action OnDeactivated;
+
+        public bool IsActive { get; private set; }
+
+        public BoosterId BoosterId => BoosterId.ShufflePiles;
+
         public void Activate()
         {
             IsActive = true;
@@ -35,7 +35,7 @@ namespace Boosters
 
         public void Tick()
         {
-            if (IsActive == false)
+            if (!IsActive)
             {
                 return;
             }
@@ -46,14 +46,14 @@ namespace Boosters
             {
                 IsActive = false;
             }
-        
+
             OnProgressChanged?.Invoke(new BoosterProgressEvent(_timer, 1, 1 - _timer));
         }
 
         public void Deactivate()
         {
             IsActive = false;
-        
+
             OnDeactivated?.Invoke();
         }
     }

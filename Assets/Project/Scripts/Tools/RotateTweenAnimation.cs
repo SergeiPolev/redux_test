@@ -5,8 +5,15 @@ namespace Tools
 {
     public class RotateTweenAnimation : MonoBehaviour
     {
+        #region Serialized Fields
+
         [SerializeField] private float _duration = 1f;
+
+        #endregion
+
         private Tween _rotateTween;
+
+        #region Event Functions
 
         private void OnEnable()
         {
@@ -17,6 +24,8 @@ namespace Tools
         {
             StopRotate();
         }
+
+        #endregion
 
         private void StartRotate()
         {

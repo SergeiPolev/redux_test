@@ -6,14 +6,16 @@ namespace Infrastructure
 {
     public class Level_StartLevelState : IState
     {
-        private IStateChanger _stateChanger;
-        private LevelProgressService _progress;
+        private readonly LevelProgressService _progress;
+        private readonly IStateChanger _stateChanger;
 
-        public Level_StartLevelState(IStateChanger stateChanger, IGameStateChanger gameStateChanger, AllServices services)
+        public Level_StartLevelState(IStateChanger stateChanger, IGameStateChanger gameStateChanger,
+            AllServices services)
         {
             _stateChanger = stateChanger;
             _progress = services.Single<LevelProgressService>();
         }
+
         public void Enter()
         {
             _progress.Stage_Start();
@@ -22,7 +24,6 @@ namespace Infrastructure
 
         public void Exit()
         {
-
         }
     }
 }

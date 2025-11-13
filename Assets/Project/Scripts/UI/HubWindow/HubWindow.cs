@@ -10,17 +10,22 @@ namespace UI.HubWindow
 {
     public class HubWindow : WindowBase
     {
-        public override WindowId WindowID => WindowId.HUB;
+        #region Serialized Fields
 
         [SerializeField] private Button _startButton;
 
-        [Header("Level Selection")]
-        [SerializeField] private TMP_Text _lvl;
-    
-        [Header("Level Items")]
-        [SerializeField] private LevelItemUI[] _levelItems;
+        [Header("Level Selection")] [SerializeField]
+        private TMP_Text _lvl;
+
+        [Header("Level Items")] [SerializeField]
+        private LevelItemUI[] _levelItems;
+
         [SerializeField] private RectTransform _levelItemRoot;
+
+        #endregion
+
         private LevelProgressService _lvlProgress;
+        public override WindowId WindowID => WindowId.HUB;
 
         public event Action OnGameStartEvent;
 
@@ -43,7 +48,7 @@ namespace UI.HubWindow
         {
             var currentLevel = _lvlProgress.CurrentLevelNumber;
 
-            for (int i = 0; i < _levelItems.Length; i++)
+            for (var i = 0; i < _levelItems.Length; i++)
             {
                 _levelItems[i].SetLevelNumber(currentLevel + i, i == 0);
             }

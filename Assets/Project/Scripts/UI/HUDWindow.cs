@@ -10,19 +10,22 @@ namespace UI
 {
     public class HUDWindow : WindowBase
     {
-        public override WindowId WindowID => WindowId.HUD;
-    
-        private LevelProgressService _levelProgressService;
-    
+        #region Serialized Fields
+
         [SerializeField] private TMP_Text _level;
         [SerializeField] private ProgressBar _progressBar;
         [SerializeField] private BoosterButton[] _boosterButtons;
+
+        #endregion
+
+        private LevelProgressService _levelProgressService;
+        public override WindowId WindowID => WindowId.HUD;
 
         protected override void _Initialize(AllServices services)
         {
             _levelProgressService = services.Single<LevelProgressService>();
             services.Single<ClearStackService>().OnClearCompleted += UpdateProgressBar;
-        
+
             foreach (var boosterButton in _boosterButtons)
             {
                 boosterButton.Initialize(services.Single<BoosterService>());

@@ -5,12 +5,14 @@ namespace UI.HubWindow
 {
     public class ToggleAnimate : MonoBehaviour
     {
-        private Animator _animator;
-        private Toggle _toggle;
-        private CustomToggle _hubNavigationToggle;
         private readonly int _isOnHash = Animator.StringToHash("IsOn");
-        private readonly int _isToggleOnAnimationHash = Animator.StringToHash("ToggleOn");
         private readonly int _isToggleOffAnimationHash = Animator.StringToHash("ToggleOff");
+        private readonly int _isToggleOnAnimationHash = Animator.StringToHash("ToggleOn");
+        private Animator _animator;
+        private CustomToggle _hubNavigationToggle;
+        private Toggle _toggle;
+
+        #region Event Functions
 
         private void Awake()
         {
@@ -45,6 +47,8 @@ namespace UI.HubWindow
             }
         }
 
+        #endregion
+
         private void PlayAnimation(bool isOn)
         {
             _animator.SetBool(_isOnHash, isOn);
@@ -52,7 +56,7 @@ namespace UI.HubWindow
 
         private void PlayInstantAnimation(bool isOn)
         {
-            int animationHash = isOn ? _isToggleOnAnimationHash : _isToggleOffAnimationHash;
+            var animationHash = isOn ? _isToggleOnAnimationHash : _isToggleOffAnimationHash;
             _animator.SetBool(_isOnHash, isOn);
             _animator.Play(animationHash, 0, 1f);
         }

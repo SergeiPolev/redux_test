@@ -7,16 +7,12 @@ namespace Input
 {
     public class TapToChooseInput : IInputListener
     {
-        private CameraService _cameraService;
+        private readonly CameraService _cameraService;
+        private readonly Vector3 _offset = new(0, 0, 0.25f);
+        private HexCell _currentHighlight;
         private LayerMask _layerMask;
 
         private Plane _plane;
-        private HexCell _currentHighlight;
-        private Vector3 _offset = new(0, 0, 0.25f);
-
-        public event Action<(Collider, Vector3)> OnTapDown;
-        public event Action<(Collider, Vector3)> OnDragTap;
-        public event Action<(Collider, Vector3)> OnTapUp;
 
         public TapToChooseInput(CameraService cameraService)
         {
@@ -25,60 +21,63 @@ namespace Input
             _plane = new Plane(Vector3.up, Vector3.zero);
         }
 
-        public void SetLayerMask(LayerMask mask)
-        {
-            _layerMask = mask;
-        }
-        
         public void OnClickDown()
         {
             var hit = RaycastBelowCursorWithOffset();
-            
+
             OnTapDown?.Invoke(hit);
         }
 
         public void OnDrag()
         {
             var hit = RaycastBelowCursorWithOffset();
-            
+
             OnDragTap?.Invoke(hit);
         }
 
         public void OnClickUp()
         {
             var hit = RaycastBelowCursorWithOffset();
-            
+
             OnTapUp?.Invoke(hit);
         }
 
         public void OnCancelInput()
         {
-            
         }
-        
+
+        public event Action<(Collider, Vector3)> OnTapDown;
+        public event Action<(Collider, Vector3)> OnDragTap;
+        public event Action<(Collider, Vector3)> OnTapUp;
+
+        public void SetLayerMask(LayerMask mask)
+        {
+            _layerMask = mask;
+        }
+
         private (Collider, Vector3) RaycastBelowCursorWithOffset()
         {
             var ray = GetMouseRay();
 
-            _plane.Raycast(ray, out float distance);
+            _plane.Raycast(ray, out var distance);
 
-            Vector3 point = ray.GetPoint(distance);
-            
-            Vector3 origin = point + _offset;
-            
-            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hitInfo,
+            var point = ray.GetPoint(distance);
+
+            var origin = point + _offset;
+
+            if (Physics.Raycast(origin, Vector3.down, out var hitInfo,
                     float.MaxValue, _layerMask))
             {
                 return (hitInfo.collider, origin);
             }
-            
+
             return (null, origin);
         }
-        
+
         private Ray GetMouseRay()
         {
-            Camera camera = _cameraService.Camera;
-            Ray ray = camera.ScreenPointToRay(UnityEngine.Input.mousePosition);
+            var camera = _cameraService.Camera;
+            var ray = camera.ScreenPointToRay(UnityEngine.Input.mousePosition);
             return ray;
         }
     }

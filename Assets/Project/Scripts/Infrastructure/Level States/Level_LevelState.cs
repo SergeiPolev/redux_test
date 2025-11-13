@@ -8,11 +8,11 @@ namespace Infrastructure
 {
     public class Level_LevelState : IState, ITick
     {
-        private WindowService _windowService;
-        private InputService _inputService;
-        private HexPilesService _hexPilesService;
-        private MergeService _mergeService;
-        private BoosterService _boosterService;
+        private readonly BoosterService _boosterService;
+        private readonly HexPilesService _hexPilesService;
+        private readonly InputService _inputService;
+        private readonly MergeService _mergeService;
+        private readonly WindowService _windowService;
 
         public Level_LevelState(AllServices services)
         {
@@ -22,7 +22,7 @@ namespace Infrastructure
             _mergeService = services.Single<MergeService>();
             _boosterService = services.Single<BoosterService>();
         }
-        
+
         public void Enter()
         {
             _windowService.Open(WindowId.HUD);
@@ -30,15 +30,15 @@ namespace Infrastructure
             _mergeService.OnLevelEnter();
         }
 
+        public void Exit()
+        {
+            _boosterService.Dispose();
+        }
+
         public void Tick()
         {
             _inputService.LateTick();
             _boosterService.Tick();
-        }
-
-        public void Exit()
-        {
-            _boosterService.Dispose();
         }
     }
 }

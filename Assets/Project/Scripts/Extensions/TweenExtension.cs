@@ -15,6 +15,7 @@ namespace Extensions
 
             return UniTask.NextFrame(token);
         }
+
         public static Tween KillTo0(this Tween t, bool andPlay = true)
         {
             if (t != null)

@@ -1,7 +1,6 @@
 namespace Infrastructure.StateMachine
 {
-    public interface IGameStateChanger: IStateChanger
+    public interface IGameStateChanger : IStateChanger
     {
-        
     }
 }

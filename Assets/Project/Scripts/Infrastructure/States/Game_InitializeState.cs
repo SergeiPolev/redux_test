@@ -6,10 +6,10 @@ namespace Infrastructure.States
 {
     internal class Game_InitializeState : IState
     {
-        private IGameStateChanger _stateChanger;
-        private ColorMaterialsService _colorMaterialsService;
+        private readonly ColorMaterialsService _colorMaterialsService;
+        private readonly IGameStateChanger _stateChanger;
 
-        public Game_InitializeState(IGameStateChanger stateChanger, AllServices services) 
+        public Game_InitializeState(IGameStateChanger stateChanger, AllServices services)
         {
             _stateChanger = stateChanger;
             _colorMaterialsService = services.Single<ColorMaterialsService>();
@@ -18,18 +18,17 @@ namespace Infrastructure.States
         public void Enter()
         {
             _colorMaterialsService.UpdateColors();
-            
+
             SetState();
         }
-        
+
+        public void Exit()
+        {
+        }
+
         private void SetState()
         {
             _stateChanger.Enter<Game_HubState>();
-        }
-        
-        public void Exit()
-        {
-
         }
     }
 }

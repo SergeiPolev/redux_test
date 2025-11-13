@@ -2,22 +2,22 @@
 using System.Collections.Concurrent;
 using System.Threading;
 using UnityEngine;
+using ThreadPriority = System.Threading.ThreadPriority;
 
 namespace Tools.Logger
 {
     public class LoggerFileWriter
     {
-        private readonly string _folder;
-        private string _filePath;
-        private LoggerFileAppender _appender;
-        private Thread _workThread;
-        private bool _disposing;
-        private readonly ConcurrentQueue<LogMessage> _messages = new();
-        private readonly ManualResetEvent _mre = new(true);
-
         private const string DateFormat = "yyyy-MM-dd HH-mm-ss";
         private const string MessageFormat = "{0:dd/MM/yyyy HH:mm:ss:ffff} [{1}]: {2}\r";
         private const int MAX_MESSAGE_LENGHT = 3500;
+        private readonly string _filePath;
+        private readonly string _folder;
+        private readonly ConcurrentQueue<LogMessage> _messages = new();
+        private readonly ManualResetEvent _mre = new(true);
+        private readonly Thread _workThread;
+        private LoggerFileAppender _appender;
+        private bool _disposing;
 
         public LoggerFileWriter(string folder)
         {
@@ -26,7 +26,7 @@ namespace Tools.Logger
             _workThread = new Thread(StoreMessage)
             {
                 IsBackground = true,
-                Priority = System.Threading.ThreadPriority.BelowNormal
+                Priority = ThreadPriority.BelowNormal,
             };
             _workThread.Start();
         }
@@ -35,41 +35,43 @@ namespace Tools.Logger
         {
             try
             {
-                if(message.Message.Length>MAX_MESSAGE_LENGHT)
+                if (message.Message.Length > MAX_MESSAGE_LENGHT)
                 {
-                    var preview = $"Message is to long {message.Message.Length}. Preview: {message.Message.Substring(0, MAX_MESSAGE_LENGHT)}";
+                    var preview =
+                        $"Message is to long {message.Message.Length}. Preview: {message.Message.Substring(0, MAX_MESSAGE_LENGHT)}";
                     _messages.Enqueue(new LogMessage(preview, message.Type) { Time = message.Time });
-
                 }
                 else
                 {
                     _messages.Enqueue(message);
                 }
+
                 _mre.Set();
             }
             catch
             {
-
             }
         }
 
         private void StoreMessage()
         {
-            while (_disposing == false)
+            while (!_disposing)
             {
-                while (_messages.IsEmpty == false)
+                while (!_messages.IsEmpty)
                 {
                     try
                     {
                         LogMessage message;
-                        if (_messages.TryPeek(out message) == false)
+                        if (!_messages.TryPeek(out message))
                         {
                             Thread.Sleep(5);
                             continue;
                         }
 
                         if (_appender == null || _appender.FileName != _filePath)
+                        {
                             _appender = new LoggerFileAppender(_filePath);
+                        }
 
 
                         var writeMassage = string.Format(MessageFormat, message.Time, message.Type, message.Message);
@@ -87,6 +89,7 @@ namespace Tools.Logger
                         break;
                     }
                 }
+
                 _mre.Reset();
                 _mre.WaitOne(500);
             }

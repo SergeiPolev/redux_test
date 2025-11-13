@@ -8,10 +8,14 @@ namespace Hexes
 {
     public class HexPile : MonoBehaviour
     {
-        public Hex[] Hexes;
+        #region Serialized Fields
+
         public Vector3 OriginPos;
-        
+
+        #endregion
+
         private Tween _returnTween;
+        public Hex[] Hexes;
 
         public event Action<HexPile> OnPileRemoved;
 
@@ -25,13 +29,13 @@ namespace Hexes
             LeanPool.Despawn(this);
             OnPileRemoved?.Invoke(this);
         }
-        
+
         public void RebuildStack()
         {
-            for (int i = 0; i < Hexes.Length; i++)
+            for (var i = 0; i < Hexes.Length; i++)
             {
                 var hex = Hexes[i];
-                
+
                 hex.HexModelView.transform.localPosition = Vector3.up * (0.1f * i);
             }
         }

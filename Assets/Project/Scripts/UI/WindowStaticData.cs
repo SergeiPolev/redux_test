@@ -7,6 +7,10 @@ namespace UI
     [CreateAssetMenu(fileName = "WindowStaticData", menuName = "ScriptableObjects/StaticData/Window")]
     public class WindowStaticData : ScriptableObject
     {
+        #region Serialized Fields
+
         public List<WindowBase> Configs;
+
+        #endregion
     }
 }

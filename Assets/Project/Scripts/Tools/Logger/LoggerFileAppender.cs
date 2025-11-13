@@ -6,25 +6,27 @@ namespace Tools.Logger
     public class LoggerFileAppender
     {
         private readonly object _lockObject = new();
-        public string FileName { get; }
 
         public LoggerFileAppender(string file)
         {
             FileName = file;
         }
 
+        public string FileName { get; }
+
         public bool Append(string content)
         {
             try
             {
-                lock(_lockObject)
+                lock (_lockObject)
                 {
-                    using (FileStream fs = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.Read))
+                    using (var fs = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.Read))
                     {
                         var bytes = Encoding.UTF8.GetBytes(content);
                         fs.Write(bytes, 0, bytes.Length);
                     }
                 }
+
                 return true;
             }
             catch
@@ -32,6 +34,5 @@ namespace Tools.Logger
                 return false;
             }
         }
-
     }
 }

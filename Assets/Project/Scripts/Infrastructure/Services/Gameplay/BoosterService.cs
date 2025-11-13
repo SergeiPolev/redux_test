@@ -15,9 +15,33 @@ namespace Infrastructure.Services.Gameplay
 
     public class BoosterService : IService, ITick, IDisposable
     {
-        private AllServices _services;
-        
         private readonly List<IBooster> _activeBoosters = new();
+        private AllServices _services;
+
+        public void Dispose()
+        {
+            for (var i = _activeBoosters.Count - 1; i >= 0; i--)
+            {
+                var booster = _activeBoosters[i];
+                booster.Deactivate();
+                _activeBoosters.RemoveAt(i);
+            }
+        }
+
+        public void Tick()
+        {
+            for (var i = _activeBoosters.Count - 1; i >= 0; i--)
+            {
+                var booster = _activeBoosters[i];
+                booster.Tick();
+
+                if (!booster.IsActive)
+                {
+                    booster.Deactivate();
+                    _activeBoosters.RemoveAt(i);
+                }
+            }
+        }
 
         public void Initialize(AllServices services)
         {
@@ -37,21 +61,6 @@ namespace Infrastructure.Services.Gameplay
             booster.Activate();
         }
 
-        public void Tick()
-        {
-            for (int i = _activeBoosters.Count - 1; i >= 0; i--)
-            {
-                var booster = _activeBoosters[i];
-                booster.Tick();
-
-                if (!booster.IsActive)
-                {
-                    booster.Deactivate();
-                    _activeBoosters.RemoveAt(i);
-                }
-            }
-        }
-
         private IBooster BuildBooster(BoosterId boosterId)
         {
             switch (boosterId)
@@ -61,10 +70,10 @@ namespace Infrastructure.Services.Gameplay
 
                 case BoosterId.ShufflePiles:
                     return new ShufflePilesBooster(_services);
-                
+
                 case BoosterId.BreakPiles:
                     return new BreakPilesBooster(_services);
-                
+
                 default:
                     throw new NotSupportedException($"Booster {boosterId} not supported");
             }
@@ -86,16 +95,6 @@ namespace Infrastructure.Services.Gameplay
             }
 
             return false;
-        }
-
-        public void Dispose()
-        {
-            for (int i = _activeBoosters.Count - 1; i >= 0; i--)
-            {
-                var booster = _activeBoosters[i];
-                booster.Deactivate();
-                _activeBoosters.RemoveAt(i);
-            }
         }
     }
 }

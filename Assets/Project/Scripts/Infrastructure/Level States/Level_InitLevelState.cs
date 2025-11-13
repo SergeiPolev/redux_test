@@ -11,13 +11,13 @@ namespace Infrastructure
 {
     public class Level_InitLevelState : IState
     {
-        private IStateChanger _stateChanger;
-        private WindowService _windowService;
-        private LevelProgressService _levelProgress;
-        private IHexGridService _hexGridService;
-        private CameraService _cameraService;
-        private CancellationAsyncService _cancellationAsyncService;
-        private ResultService _resultService;
+        private readonly CameraService _cameraService;
+        private readonly CancellationAsyncService _cancellationAsyncService;
+        private readonly IHexGridService _hexGridService;
+        private readonly LevelProgressService _levelProgress;
+        private readonly ResultService _resultService;
+        private readonly IStateChanger _stateChanger;
+        private readonly WindowService _windowService;
 
         public Level_InitLevelState(IStateChanger stateChanger, AllServices services)
         {
@@ -29,23 +29,24 @@ namespace Infrastructure
             _cancellationAsyncService = services.Single<CancellationAsyncService>();
             _resultService = services.Single<ResultService>();
         }
+
         public async void Enter()
         {
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
-            
+
             _levelProgress.LevelStarted();
             _windowService.Open(WindowId.LoadingScreen);
-            
+
             _hexGridService.CreateGrid();
             _cameraService.SetCenterPos();
             _resultService.OnLevelEnter();
 
             await UniTask.WaitForEndOfFrame(_cancellationAsyncService.Token);
-            
+
             _stateChanger.Enter<Level_StartLevelState>();
         }
-        
+
         public void Exit()
         {
             _windowService.Close(WindowId.LoadingScreen);

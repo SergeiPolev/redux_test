@@ -1,4 +1,3 @@
-using Hexes;
 using Infrastructure.Services.Core;
 using Infrastructure.Services.Progress;
 using Infrastructure.StateMachine;
@@ -9,12 +8,13 @@ namespace Infrastructure.Services.Gameplay
     public class ResultService : IService
     {
         private IStateChanger _gameStateChanger;
-        private WindowService _windowService;
+        private IHexGridService _hexGridService;
         private LevelProgressService _levelProgressService;
         private LevelStateMachine _levelStateMachine;
-        private IHexGridService _hexGridService;
+        private WindowService _windowService;
 
-        public void Initialize(IStateChanger gameStateChanger, LevelProgressService levelProgressService, MergeService mergeService, IHexGridService hexGridService)
+        public void Initialize(IStateChanger gameStateChanger, LevelProgressService levelProgressService,
+            MergeService mergeService, IHexGridService hexGridService)
         {
             _hexGridService = hexGridService;
             _gameStateChanger = gameStateChanger;
@@ -22,16 +22,17 @@ namespace Infrastructure.Services.Gameplay
 
             mergeService.OnMergeEnded += CheckLose;
         }
-        
+
         public void OnLevelEnter()
         {
             _hexGridService.GetGrid().OnHexesRemoved += CountHexes;
         }
+
         public void OnLevelExit()
         {
             _hexGridService.GetGrid().OnHexesRemoved -= CountHexes;
         }
-        
+
         private void CountHexes(int value)
         {
             _levelProgressService.HexesCurrent += value;
@@ -41,15 +42,15 @@ namespace Infrastructure.Services.Gameplay
                 Win();
             }
         }
-        
+
         private void CheckLose()
         {
             bool AnyFreeSpace()
             {
-                HexGrid hexGrid = _hexGridService.GetGrid();
-                for (int x = 0; x < hexGrid.Width; x++)
+                var hexGrid = _hexGridService.GetGrid();
+                for (var x = 0; x < hexGrid.Width; x++)
                 {
-                    for (int y = 0; y < hexGrid.Height; y++)
+                    for (var y = 0; y < hexGrid.Height; y++)
                     {
                         if (hexGrid.Cells[x, y].IsEmpty())
                         {
@@ -60,7 +61,7 @@ namespace Infrastructure.Services.Gameplay
 
                 return false;
             }
-            
+
             if (!AnyFreeSpace())
             {
                 Lose();
@@ -71,7 +72,7 @@ namespace Infrastructure.Services.Gameplay
         {
             _levelStateMachine = levelStateMachine;
         }
-        
+
         public void Win()
         {
             _gameStateChanger.Enter<Game_ResultState, LevelResult>(LevelResult.WIN);

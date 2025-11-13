@@ -14,7 +14,7 @@ namespace Infrastructure.Services.Gameplay
         Violet,
         Orange,
     }
-    
+
     public class ColorMaterialsService : IService
     {
         private GlobalBlackboard _globalBlackboard;
@@ -25,7 +25,7 @@ namespace Infrastructure.Services.Gameplay
             _staticData = staticData;
             _globalBlackboard = globalBlackboard;
         }
-        
+
         public void UpdateColors()
         {
             var colors = _staticData.ColorsStaticData.Colors;

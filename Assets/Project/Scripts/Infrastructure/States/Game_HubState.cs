@@ -9,14 +9,14 @@ namespace Infrastructure.States
 {
     internal class Game_HubState : IState
     {
-        private WindowService _windowService;
-        private IGameStateChanger _stateChanger;
-        private FadeWindowModel _fadeWindowModel;
-
-        private HubWindow _uiHub;
+        private readonly FadeWindowModel _fadeWindowModel;
+        private readonly IGameStateChanger _stateChanger;
+        private readonly WindowService _windowService;
         private TransitionFadeWindow _uiFade;
 
-        public Game_HubState(IGameStateChanger stateChanger, AllServices services) 
+        private HubWindow _uiHub;
+
+        public Game_HubState(IGameStateChanger stateChanger, AllServices services)
         {
             _stateChanger = stateChanger;
             _windowService = services.Single<WindowService>();
@@ -25,9 +25,19 @@ namespace Infrastructure.States
 
         public void Enter()
         {
-            if (_windowService.Open(WindowId.HUB, out _uiHub) == false)
+            if (!_windowService.Open(WindowId.HUB, out _uiHub))
+            {
                 _uiHub = _windowService.GetOrCreateWindow<HubWindow>(WindowId.HUB);
+            }
+
             _uiHub.OnGameStartEvent += Window_OnGameStartEvent;
+        }
+
+
+        public void Exit()
+        {
+            _uiHub.OnGameStartEvent -= Window_OnGameStartEvent;
+            _windowService.Close(WindowId.HUB);
         }
 
         private void Window_OnGameStartEvent()
@@ -41,14 +51,5 @@ namespace Infrastructure.States
         {
             _stateChanger.Enter<Game_LoadLevelState>();
         }
-
-
-
-        public void Exit()
-        {
-            _uiHub.OnGameStartEvent -= Window_OnGameStartEvent;
-            _windowService.Close(WindowId.HUB);
-        }
     }
 }
-

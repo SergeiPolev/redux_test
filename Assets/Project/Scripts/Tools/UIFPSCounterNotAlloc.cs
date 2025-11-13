@@ -5,24 +5,37 @@ namespace Tools
 {
     public class UIFPSCounterNotAlloc : MonoBehaviour
     {
+        #region Serialized Fields
+
         [SerializeField] private Gradient gradient;
         [SerializeField] private float _topFrameRate = 60f;
         [SerializeField] private TMP_Text _average, _min, _max;
+
+        #endregion
+
         private string[] _frames, _framesMin, _framesMax;
+
+        #region Event Functions
 
         private void Awake()
         {
             _frames = new string[999];
-            for (int i = 0; i < _frames.Length; i++)
-                _frames[i] = "FPS:" + i.ToString();
+            for (var i = 0; i < _frames.Length; i++)
+            {
+                _frames[i] = "FPS:" + i;
+            }
 
             _framesMin = new string[999];
-            for (int i = 0; i < _frames.Length; i++)
-                _framesMin[i] = "MIN:" + i.ToString();
+            for (var i = 0; i < _frames.Length; i++)
+            {
+                _framesMin[i] = "MIN:" + i;
+            }
 
             _framesMax = new string[999];
-            for (int i = 0; i < _frames.Length; i++)
-                _framesMax[i] = "MAX:" + i.ToString();
+            for (var i = 0; i < _frames.Length; i++)
+            {
+                _framesMax[i] = "MAX:" + i;
+            }
 
             FPSCounter.OnUpdateFPS += FPSCounter_OnUpdateFPS;
         }
@@ -31,6 +44,8 @@ namespace Tools
         {
             FPSCounter.OnUpdateFPS -= FPSCounter_OnUpdateFPS;
         }
+
+        #endregion
 
         private void FPSCounter_OnUpdateFPS()
         {

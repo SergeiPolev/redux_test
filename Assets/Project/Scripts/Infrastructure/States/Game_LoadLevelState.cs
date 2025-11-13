@@ -5,9 +5,9 @@ namespace Infrastructure.States
 {
     internal class Game_LoadLevelState : IState
     {
-        private IGameStateChanger _stateChanger;
+        private readonly IGameStateChanger _stateChanger;
 
-        public Game_LoadLevelState(IGameStateChanger stateChanger, AllServices services) 
+        public Game_LoadLevelState(IGameStateChanger stateChanger, AllServices services)
         {
             _stateChanger = stateChanger;
         }
@@ -19,8 +19,6 @@ namespace Infrastructure.States
 
         public void Exit()
         {
-
         }
-
     }
 }

@@ -7,14 +7,20 @@ namespace Infrastructure.Services.Gameplay
 {
     public class ClearStackService : IService, IDisposable
     {
-        private IHexGridService _hexGridService;
-        private MergeService _mergeService;
         private CancellationAsyncService _cancellationAsyncService;
+        private IHexGridService _hexGridService;
         private LevelProgressService _levelProgressService;
+        private MergeService _mergeService;
+
+        public void Dispose()
+        {
+            _mergeService.OnMergeEnded -= OnMergeEnded;
+        }
 
         public event Action OnClearCompleted;
-        
-        public void Initialize(IHexGridService hexGridService, MergeService mergeService, CancellationAsyncService cancellationAsyncService, LevelProgressService levelProgressService)
+
+        public void Initialize(IHexGridService hexGridService, MergeService mergeService,
+            CancellationAsyncService cancellationAsyncService, LevelProgressService levelProgressService)
         {
             _levelProgressService = levelProgressService;
             _cancellationAsyncService = cancellationAsyncService;
@@ -41,19 +47,14 @@ namespace Infrastructure.Services.Gameplay
 
         private async void ClearCell(HexCell cell)
         {
-            int topColorCount = cell.GetTopColorCount();
+            var topColorCount = cell.GetTopColorCount();
 
             if (topColorCount >= 10)
             {
                 await cell.RemoveTopHexes(_cancellationAsyncService.Token);
             }
-            
-            OnClearCompleted?.Invoke();
-        }
 
-        public void Dispose()
-        {
-            _mergeService.OnMergeEnded -= OnMergeEnded;
+            OnClearCompleted?.Invoke();
         }
     }
 }

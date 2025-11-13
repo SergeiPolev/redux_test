@@ -6,8 +6,14 @@ namespace Infrastructure.Services.Core
     [CreateAssetMenu(fileName = "StageVisualsStaticData", menuName = "ScriptableObjects/StaticData/Stage Visuals")]
     public class StageVisualsStaticData : ScriptableObject
     {
+        #region Serialized Fields
+
         public StageVisual[] Visuals;
+
         public Vector4 ShadowOffset;
+
+        #endregion
+
         /*public Vector4 OutlineOffset;
     public float OutlineScale = 1.5f;*/
     }

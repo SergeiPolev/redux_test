@@ -6,12 +6,16 @@ namespace UI.Boosters
 {
     public class BoosterButton : MonoBehaviour
     {
+        #region Serialized Fields
+
         [SerializeField] private BoosterId _boosterId;
-    
+
+        #endregion
+
         private BoosterService _boosterService;
-    
+
         private Button _button;
-    
+
         public BoosterId BoosterId => _boosterId;
 
         public void Initialize(BoosterService boosterService)

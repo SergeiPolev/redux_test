@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Infrastructure.Services.Core;
 using Infrastructure.Services.Gameplay;
@@ -7,31 +8,36 @@ using UnityEngine;
 
 namespace Infrastructure.Services.Progress
 {
-    [System.Serializable]
+    [Serializable]
     public class LevelProgressData
     {
+        #region Serialized Fields
+
         public int MaxLevel = 99;
         public int CurrentLevel = 1;
+
+        #endregion
     }
-    
+
     public class LevelProgressService : IService, ITick
     {
-        private float _timer;
+        private readonly LevelProgressData _data = new();
         private StaticDataService _staticDataService;
-        private LevelProgressData _data = new LevelProgressData();
-        
-        public float Timer => _timer;
+
+        public float Timer { get; private set; }
+
         public int LevelIndex => CurrentLevelNumber - 1;
         public bool IsMaxLevel => CurrentLevelNumber == MaxLevel;
 
         public int CurrentLevelNumber
-        { 
+        {
             get => _data.CurrentLevel;
             private set => _data.CurrentLevel = value;
         }
+
         public int MaxLevel
-        { 
-            get => _data.MaxLevel; 
+        {
+            get => _data.MaxLevel;
             set => _data.MaxLevel = value;
         }
 
@@ -40,18 +46,23 @@ namespace Infrastructure.Services.Progress
 
         public LevelAsset CurrentLevelConfig { get; private set; }
         public float LevelProgress { get; set; }
-        
+
         public int HexesGoal { get; private set; }
         public int HexesCurrent { get; set; }
 
-        public void Initialize(AllServices services )
+        public void Tick()
+        {
+            Timer += Time.deltaTime;
+        }
+
+        public void Initialize(AllServices services)
         {
             _staticDataService = services.Single<StaticDataService>();
         }
-        
-        public void Tick()
+
+        public List<ColorID> GetColors()
         {
-            _timer += Time.deltaTime;
+            return CurrentLevelConfig.GetAvailableColors(HexesCurrent);
         }
 
         #region Level
@@ -59,8 +70,8 @@ namespace Infrastructure.Services.Progress
         public void LevelStarted()
         {
             CurrentStageNumber = 1;
-            _timer = 0;
-            
+            Timer = 0;
+
             CurrentLevelConfig = _staticDataService.Levels[(CurrentLevelNumber - 1) % _staticDataService.Levels.Count];
             HexesGoal = CurrentLevelConfig.targetBurnedHexes;
             HexesCurrent = 0;
@@ -80,13 +91,16 @@ namespace Infrastructure.Services.Progress
 
         public void SetNextLevel(bool ignoreMax = false)
         {
-            if (ignoreMax || IsMaxLevel == false)
+            if (ignoreMax || !IsMaxLevel)
             {
                 CurrentLevelNumber++;
                 if (ignoreMax && CurrentLevelNumber > MaxLevel)
+                {
                     MaxLevel = CurrentLevelNumber;
+                }
             }
         }
+
         public void SetPreviousLevel()
         {
             if (CurrentLevelNumber > 1)
@@ -101,7 +115,7 @@ namespace Infrastructure.Services.Progress
 
         public void Stage_Start()
         {
-            _timer = 0;
+            Timer = 0;
         }
 
 
@@ -113,16 +127,8 @@ namespace Infrastructure.Services.Progress
 
         internal void Stage_Lose()
         {
-
         }
-
-
 
         #endregion
-
-        public List<ColorID> GetColors()
-        {
-            return CurrentLevelConfig.GetAvailableColors(HexesCurrent);
-        }
     }
 }
