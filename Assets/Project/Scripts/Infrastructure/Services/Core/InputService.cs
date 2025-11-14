@@ -31,18 +31,6 @@ namespace Infrastructure.Services.Core
         private InputType _inputType;
         private IInputListener _tapToChooseListener;
 
-        public void LateTick()
-        {
-            if (_forcedInputType == ForcedInputType.None)
-            {
-                StandardInputTick();
-            }
-            else
-            {
-                ForcedInputTick();
-            }
-        }
-
         public T GetCurrentListener<T>(InputType inputType) where T : class, IInputListener
         {
             if (inputType == _inputType)
@@ -54,13 +42,25 @@ namespace Infrastructure.Services.Core
             return GetListener(_inputType) as T;
         }
 
-        public void Initialize(CameraService cameraService, IHexGridService hexGridService)
+        public void Initialize(CameraService cameraService, IHexGridService hexGridService, GlobalBlackboard blackboard)
         {
-            _dragAndDropListener = new DragAndDropPilesInput(cameraService, hexGridService);
+            _dragAndDropListener = new DragAndDropPilesInput(cameraService, hexGridService, blackboard.Settings);
             _idleListener = new IdleInput();
-            _tapToChooseListener = new TapToChooseInput(cameraService);
+            _tapToChooseListener = new TapToChooseInput(cameraService, blackboard.Settings);
 
             _currentListener = _dragAndDropListener;
+        }
+
+        public void LateTick()
+        {
+            if (_forcedInputType == ForcedInputType.None)
+            {
+                StandardInputTick();
+            }
+            else
+            {
+                ForcedInputTick();
+            }
         }
 
         private void ForcedInputTick()

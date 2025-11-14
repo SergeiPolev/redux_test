@@ -6,7 +6,7 @@ using UI;
 
 namespace Infrastructure
 {
-    public class Level_LevelState : IState, ITick
+    public class Level_LevelState : IState, ITick, ILateTick
     {
         private readonly BoosterService _boosterService;
         private readonly HexPilesService _hexPilesService;
@@ -37,8 +37,12 @@ namespace Infrastructure
 
         public void Tick()
         {
-            _inputService.LateTick();
             _boosterService.Tick();
+        }
+
+        public void LateTick()
+        {
+            _inputService.LateTick();
         }
     }
 }

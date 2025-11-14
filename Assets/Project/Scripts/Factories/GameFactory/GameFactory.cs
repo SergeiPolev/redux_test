@@ -30,7 +30,7 @@ namespace Factories.GameFactory
         {
             var prefab = _staticData.Prefabs.HexCellView;
             var model = LeanPool.Spawn(prefab, Vector3.zero, Quaternion.identity, _cellsParent);
-            model.Initialize(index);
+            model.Initialize(index, _globalBlackboard.Settings);
 
             return model;
         }

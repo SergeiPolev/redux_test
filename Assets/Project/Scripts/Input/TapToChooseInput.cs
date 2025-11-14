@@ -1,6 +1,7 @@
 using System;
 using Hexes;
 using Infrastructure.Services.Core;
+using Settings;
 using UnityEngine;
 
 namespace Input
@@ -8,14 +9,15 @@ namespace Input
     public class TapToChooseInput : IInputListener
     {
         private readonly CameraService _cameraService;
-        private readonly Vector3 _offset = new(0, 0, 0.25f);
         private HexCell _currentHighlight;
         private LayerMask _layerMask;
 
         private Plane _plane;
+        private SettingsStaticData _settings;
 
-        public TapToChooseInput(CameraService cameraService)
+        public TapToChooseInput(CameraService cameraService, SettingsStaticData settings)
         {
+            _settings = settings;
             _cameraService = cameraService;
 
             _plane = new Plane(Vector3.up, Vector3.zero);
@@ -63,10 +65,10 @@ namespace Input
 
             var point = ray.GetPoint(distance);
 
-            var origin = point + _offset;
+            var origin = point + _settings.TapToChooseOffset;
 
             if (Physics.Raycast(origin, Vector3.down, out var hitInfo,
-                    float.MaxValue, _layerMask))
+                    _settings.RaycastDistance, _layerMask))
             {
                 return (hitInfo.collider, origin);
             }

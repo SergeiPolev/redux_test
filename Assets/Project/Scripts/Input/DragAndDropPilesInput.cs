@@ -2,6 +2,7 @@ using Hexes;
 using Infrastructure.Services.Core;
 using Infrastructure.Services.Gameplay;
 using Layer_Manager;
+using Settings;
 using UnityEngine;
 
 namespace Input
@@ -14,9 +15,11 @@ namespace Input
         private HexPile _draggableHexPile;
 
         private Plane _plane;
+        private SettingsStaticData _settings;
 
-        public DragAndDropPilesInput(CameraService cameraService, IHexGridService hexGridService)
+        public DragAndDropPilesInput(CameraService cameraService, IHexGridService hexGridService, SettingsStaticData settings)
         {
+            _settings = settings;
             _cameraService = cameraService;
             _hexGridService = hexGridService;
 
@@ -27,7 +30,7 @@ namespace Input
         {
             var ray = GetMouseRay();
 
-            if (Physics.Raycast(ray.origin, ray.direction, out var hit, 100f, LayerManager.HexPileLayerMask))
+            if (Physics.Raycast(ray.origin, ray.direction, out var hit, _settings.RaycastDistance, LayerManager.HexPileLayerMask))
             {
                 if (hit.collider.TryGetComponent<HexPile>(out var hexPile))
                 {
@@ -67,7 +70,7 @@ namespace Input
 
             var hit = RaycastBelowCursor();
 
-            _draggableHexPile.transform.position = hit + new Vector3(0, 0.5f, 0.5f);
+            _draggableHexPile.transform.position = hit + _settings.DragOffset;
 
             UnselectCell();
 

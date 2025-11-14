@@ -85,8 +85,6 @@ namespace Hexes
                     };
 
                     cell.ModelView.transform.position = cell.WorldPos;
-                    cell.ModelView.x = cell.x;
-                    cell.ModelView.y = cell.y;
 
                     cell.SetState(_levelAsset.IsBlocked(x, y)
                         ? HexCell.HexCellState.Disabled
@@ -132,11 +130,6 @@ namespace Hexes
         public bool IsInside(int x, int y)
         {
             return x >= 0 && x < Width && y >= 0 && y < Height;
-        }
-
-        public Vector2Int ClampXY(Vector2Int xy)
-        {
-            return new Vector2Int(Mathf.Clamp(xy.x, 0, Width - 1), Mathf.Clamp(xy.y, 0, Height - 1));
         }
 
         // ------------------- GRID <-> WORLD ---------------------
@@ -226,28 +219,6 @@ namespace Hexes
             var x = q;
             var y = r + (q >> 1); // r + floor(q/2)
             return (x, y);
-        }
-
-        // расстояние в шагах между двумя клетками
-        public int HexDistance(int x1, int y1, int x2, int y2)
-        {
-            var a1 = OffsetToAxial(x1, y1);
-            var a2 = OffsetToAxial(x2, y2);
-
-            // axial -> cube
-            var xA = a1.q;
-            var zA = a1.r;
-            var yA = -xA - zA;
-
-            var xB = a2.q;
-            var zB = a2.r;
-            var yB = -xB - zB;
-
-            var dx = xA - xB;
-            var dy = yA - yB;
-            var dz = zA - zB;
-
-            return (Mathf.Abs(dx) + Mathf.Abs(dy) + Mathf.Abs(dz)) / 2;
         }
 
         public List<HexCell> GetRing(int cx, int cy, int radius)

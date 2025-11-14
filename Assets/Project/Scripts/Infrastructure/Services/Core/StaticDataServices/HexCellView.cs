@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Extensions;
 using Lean.Pool;
+using Settings;
 using UnityEngine;
 
 namespace Infrastructure.Services.Core
@@ -14,9 +15,6 @@ namespace Infrastructure.Services.Core
         [SerializeField] private Material Normal;
         [SerializeField] private ParticleSystem PilePlacedVFX;
 
-        public int x;
-        public int y;
-
         #endregion
 
         private Tween _fillTween;
@@ -26,11 +24,13 @@ namespace Infrastructure.Services.Core
 
         private Tween _jumpTween;
         private Tween _pilePlacedTween;
+        private SettingsStaticData _settings;
 
         public int Index { get; private set; }
 
-        public void Initialize(int index)
+        public void Initialize(int index, SettingsStaticData settings)
         {
+            _settings = settings;
             Index = index;
         }
 
@@ -51,13 +51,13 @@ namespace Infrastructure.Services.Core
         public void OnHexFillAnimation()
         {
             _fillTween.KillTo0();
-            _fillTween = transform.DOScaleY(-0.1f, 0.175f).SetLoops(2, LoopType.Yoyo).SetRelative();
+            _fillTween = transform.DOScaleY(_settings.FillCellHeight, _settings.FillCellDuration).SetLoops(2, LoopType.Yoyo).SetRelative();
         }
 
         public void OnHammeredAnimation()
         {
             _fillTween.KillTo0();
-            _fillTween = transform.DOScaleY(-0.4f, 0.25f).SetLoops(2, LoopType.Yoyo).SetRelative();
+            _fillTween = transform.DOScaleY(_settings.HammeredHeight, _settings.HammeredDuration).SetLoops(2, LoopType.Yoyo).SetRelative();
         }
 
         public void OnPilePlacedAnimation()
@@ -66,8 +66,8 @@ namespace Infrastructure.Services.Core
 
             _initPos = transform.position;
 
-            sequence.Append(transform.DOMoveY(0.5f, 0).SetRelative());
-            sequence.Append(transform.DOMoveY(-0.5f, 0.15f).SetRelative());
+            sequence.Append(transform.DOMoveY(_settings.PilePlaceHeight, 0).SetRelative());
+            sequence.Append(transform.DOMoveY(-_settings.PilePlaceHeight, _settings.PilePlaceDuration).SetRelative());
             sequence.AppendCallback(PilePlacedVFX.Play);
 
             _pilePlacedTween = sequence.Play().SetLink(gameObject);
@@ -77,22 +77,25 @@ namespace Infrastructure.Services.Core
         {
             _hoverTween?.Kill();
 
-            _hoverTween = transform.DOMoveY(0.4f, 0.175f).SetRelative().SetLink(gameObject);
+            _hoverTween = transform.DOMoveY(_settings.HoverHeight, _settings.HoverDuration).SetRelative().SetLink(gameObject);
         }
 
         public void Unhovered()
         {
             _hoverTween?.Kill();
 
-            _hoverTween = transform.DOMove(_initPos, 0.175f).SetLink(gameObject);
+            _hoverTween = transform.DOMove(_initPos, _settings.HoverDuration).SetLink(gameObject);
         }
 
         public void Jump(float distanceDamping)
         {
             _jumpTween?.KillTo0();
 
-            _jumpTween = transform.DOMoveY(1 * distanceDamping, 0.1f).SetRelative().SetLoops(2, LoopType.Yoyo)
-                .SetLink(gameObject).SetEase(Ease.Linear);
+            _jumpTween = transform.DOMoveY(_settings.HammerJumpHeight * distanceDamping, _settings.HammerJumpDuration)
+                .SetRelative()
+                .SetLoops(2, LoopType.Yoyo)
+                .SetLink(gameObject)
+                .SetEase(Ease.Linear);
         }
 
         public void Despawn()

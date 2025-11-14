@@ -103,10 +103,10 @@ namespace Infrastructure.States
         private void InitCore()
         {
             _services.Single<StaticDataService>().Initialize();
-            _services.Single<GlobalBlackboard>().Initialize();
+            _services.Single<GlobalBlackboard>().Initialize(_services.Single<StaticDataService>());
 
             _services.Single<InputService>()
-                .Initialize(_services.Single<CameraService>(), _services.Single<IHexGridService>());
+                .Initialize(_services.Single<CameraService>(), _services.Single<IHexGridService>(), _services.Single<GlobalBlackboard>());
 
             _services.Single<WindowService>().Initialize(_services.Single<UIFactory>());
             _services.Single<UIFactory>().Initialize(_services);
